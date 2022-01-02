@@ -15,16 +15,19 @@ class QuestionViewController: UIViewController {
     
     @IBOutlet var colorImageView: [UIImageView]!
     
+//    var chosenColors:[UIColor] = []
+    var chosenColorsTag : [Int] = []
+    
     var numOfChoice = 1
-    let colors = [
-        UIColor(red: 250/255, green: 44/255, blue: 44/255, alpha: 1),
-        UIColor(red: 25/255, green: 82/255, blue: 254/255, alpha: 1),
-        UIColor(red: 254/255, green: 242/255, blue: 78/255, alpha: 1),
-        UIColor(red: 136/255, green: 241/255, blue: 0, alpha: 1),
-        UIColor(red: 170/255, green: 115/255, blue: 245/255, alpha: 1),
-        UIColor(red: 250/255, green: 166/255, blue: 3/255, alpha: 1),
-        UIColor.white
-    ]
+//    let colors = [
+//        UIColor(red: 250/255, green: 44/255, blue: 44/255, alpha: 1),
+//        UIColor(red: 25/255, green: 82/255, blue: 254/255, alpha: 1),
+//        UIColor(red: 254/255, green: 242/255, blue: 78/255, alpha: 1),
+//        UIColor(red: 136/255, green: 241/255, blue: 0, alpha: 1),
+//        UIColor(red: 170/255, green: 115/255, blue: 245/255, alpha: 1),
+//        UIColor(red: 250/255, green: 166/255, blue: 3/255, alpha: 1),
+//        UIColor.white
+//    ]
     
     
     override func viewDidLoad() {
@@ -40,6 +43,11 @@ class QuestionViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    @IBSegueAction func showResultView(_ coder: NSCoder) -> ResultViewController? {
+        let controller = ResultViewController(coder: coder)
+        controller?.chosenColorsTag = chosenColorsTag
+        return controller
+    }
     
     @IBAction func pressColorButton(_ sender: UIButton) {
         sender.isOpaque = true
@@ -47,23 +55,23 @@ class QuestionViewController: UIViewController {
         
 //        sender.isHidden = true
         
+    
+        setColorImageView(iv: colorImageView[numOfChoice - 1], color: sender.backgroundColor!)
         
-        numOfChoice += 1
+//        chosenColors.append(chosenColorImage.backgroundColor!)
+        chosenColorsTag.append(sender.tag)
         
-        if numOfChoice >= 5{
+        
+        if numOfChoice >= 4{
             for b in colorButton{
                 b.alpha = 1
             }
-            numOfChoice = 0
+            numOfChoice = 1
+            
+            performSegue(withIdentifier: "showResultSegue", sender: chosenColorsTag)
         }else{
+            numOfChoice += 1
             questionLabel.text = "第\(numOfChoice)個喜歡的顏色"
-            
-            let chosenColorImage = colorImageView[numOfChoice - 2]
-            chosenColorImage.clipsToBounds = true
-            chosenColorImage.layer.cornerRadius = chosenColorImage.bounds.width * 0.5
-            chosenColorImage.backgroundColor = sender.backgroundColor
-            
-            
         }
         
         

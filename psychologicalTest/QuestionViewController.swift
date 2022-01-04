@@ -15,21 +15,10 @@ class QuestionViewController: UIViewController {
     
     @IBOutlet var colorImageView: [UIImageView]!
     
-//    var chosenColors:[UIColor] = []
     var chosenColorsTag : [Int] = []
     
     var numOfChoice = 1
-//    let colors = [
-//        UIColor(red: 250/255, green: 44/255, blue: 44/255, alpha: 1),
-//        UIColor(red: 25/255, green: 82/255, blue: 254/255, alpha: 1),
-//        UIColor(red: 254/255, green: 242/255, blue: 78/255, alpha: 1),
-//        UIColor(red: 136/255, green: 241/255, blue: 0, alpha: 1),
-//        UIColor(red: 170/255, green: 115/255, blue: 245/255, alpha: 1),
-//        UIColor(red: 250/255, green: 166/255, blue: 3/255, alpha: 1),
-//        UIColor.white
-//    ]
-    
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         questionLabel.text = "第\(numOfChoice)個喜歡的顏色"
@@ -39,26 +28,40 @@ class QuestionViewController: UIViewController {
             colorButton[i].clipsToBounds = true
             colorButton[i].layer.cornerRadius = 10
         }
+    }
+    
 
-        // Do any additional setup after loading the view.
+    @IBAction func pressTryAgainButton(_ sender: UIButton) {
+
+        for cb in colorButton{
+            cb.alpha = 1
+        }
+
+        for iv in colorImageView{
+            iv.alpha = 0
+        }
+
+        chosenColorsTag = []
+        numOfChoice = 1
+        questionLabel.text = "第\(numOfChoice)個喜歡的顏色"
+
     }
     
     @IBSegueAction func showResultView(_ coder: NSCoder) -> ResultViewController? {
-        let controller = ResultViewController(coder: coder)
+        let controller =  ResultViewController(coder: coder)
         controller?.chosenColorsTag = chosenColorsTag
         return controller
     }
     
+    
+   
+    
     @IBAction func pressColorButton(_ sender: UIButton) {
         sender.isOpaque = true
         sender.alpha = 0
-        
-//        sender.isHidden = true
-        
-    
+   
         setColorImageView(iv: colorImageView[numOfChoice - 1], color: sender.backgroundColor!)
         
-//        chosenColors.append(chosenColorImage.backgroundColor!)
         chosenColorsTag.append(sender.tag)
         
         
@@ -67,14 +70,11 @@ class QuestionViewController: UIViewController {
                 b.alpha = 1
             }
             numOfChoice = 1
-            
-            performSegue(withIdentifier: "showResultSegue", sender: chosenColorsTag)
+            performSegue(withIdentifier: "showResultSegue", sender: nil)
         }else{
             numOfChoice += 1
             questionLabel.text = "第\(numOfChoice)個喜歡的顏色"
         }
-        
-        
     }
     
     /*
